@@ -18,5 +18,9 @@
     "astro": "^4.3.6",
     "pagefind": "^1.0.4",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-astro": "^0.13.0"
   }
 }
