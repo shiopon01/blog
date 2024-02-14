@@ -5,16 +5,18 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.5.4",
     "@astrojs/mdx": "^2.1.1",
     "@astrojs/rss": "^4.0.5",
     "@astrojs/sitemap": "^3.0.5",
+    "@pagefind/default-ui": "^1.0.4",
     "astro": "^4.3.6",
-    "@astrojs/check": "^0.5.4",
+    "pagefind": "^1.0.4",
     "typescript": "^5.3.3"
   }
 }
