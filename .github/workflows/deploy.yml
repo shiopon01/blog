@@ -17,11 +17,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Setup GCP Auth
-        uses: google-github-actions/auth@v2
-        with:
-          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+      - run: node bin/getArticles.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          DATABASE_ID: ${{ secrets.DATABASE_ID }}
 
       - name: Install Dependencies
         run: npm install

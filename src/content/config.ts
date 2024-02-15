@@ -5,6 +5,7 @@ const articles = defineCollection({
 	// Type-check frontmatter using a schema
 	schema: z.object({
 		title: z.string(),
+		tags: z.array(z.string()).optional(),
 		description: z.string(),
 		// Transform string to Date object
 		pubDate: z.coerce.date(),
