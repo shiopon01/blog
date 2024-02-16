@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+      - name: Install Dependencies
+        run: npm install
 
       - name: Clean Articles
         run: rm -f src/content/articles/*
@@ -25,8 +27,6 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           DATABASE_ID: ${{ secrets.DATABASE_ID }}
 
-      - name: Install Dependencies
-        run: npm install
       - name: Build
         run: npm run build
       - name: Deploy to GitHub Pages
