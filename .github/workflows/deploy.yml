@@ -17,7 +17,10 @@ jobs:
         with:
           node-version: '20'
 
-      - run: node bin/getArticles.js
+      - name: Clean Articles
+        run: rm -f src/content/articles/*
+      - name: Get Articles
+        run: node bin/getArticles.js
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           DATABASE_ID: ${{ secrets.DATABASE_ID }}
