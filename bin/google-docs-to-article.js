@@ -3,7 +3,9 @@ import { google } from 'googleapis';
 import matter from 'gray-matter';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const regex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}/;
 
@@ -66,29 +68,51 @@ async function writeExportedFiles({ exportedFiles, outputDirectoryPath }) {
             return;
         }
 
-        const { body, meta } = convertMetadata(exportedFile);
+        const { body, meta, isDraft, isFuture } = convertMetadata(exportedFile);
+        if (isDraft || isFuture) {
+            return;
+        }
+
+        const cleanedBody = body
+            .replaceAll('\\`', '`')
+            .replaceAll('\\=', '=')
+            .replaceAll('\\*', '*')
+            .replaceAll('\\#', '#')
+            .replaceAll('\\_', '_')
+            .replaceAll('\\-', '-')
+            .replaceAll('\\+', '+')
+            .replaceAll('\\[', '[')
+            .replaceAll('\\]', ']')
+            .replaceAll('\\(', '(')
+            .replaceAll('\\)', ')');
+
         await fsPromises.writeFile(
             `${outputDirectoryPath}/${exportedFile.name}.md`,
             matter.stringify(
-                body,
+                cleanedBody,
                 meta
-            ).replaceAll('\\`', '`')
+            )
         );
     });
 }
 
 function convertMetadata(exportedFile) {
+    const pubDateFromFilename = regex.exec(exportedFile.name)[0];
+    const pubDateObj = dayjs(pubDateFromFilename).tz('Asia/Tokyo');
+    const today = dayjs().tz('Asia/Tokyo');
+
     const meta = {
         author: 'shiopon01',
-        pubDate: dayjs(regex.exec(exportedFile.name)[0]).utc(true).format('YYYY-MM-DD'),
+        pubDate: pubDateObj.format('YYYY-MM-DD'),
         title: '',
         postSlug: exportedFile.name,
-        featured: false,
-        draft: false,
         tags: [],
         ogImage: '',
         description: ''
     };
+
+    let isDraft = false;
+    const isFuture = pubDateObj.isAfter(today, 'day');
 
     let bodyArr = exportedFile.data.split('\n');
     while (true) {
@@ -104,9 +128,8 @@ function convertMetadata(exportedFile) {
             case 'description':
                 meta[key] = value;
                 break;
-            case 'featured':
             case 'draft':
-                meta[key] = (value === 'true');
+                isDraft = (value === 'true');
                 break;
             case 'tags':
                 meta[key] = value.split(',');
@@ -115,7 +138,9 @@ function convertMetadata(exportedFile) {
     }
     return {
         body: bodyArr.join('\n'),
-        meta
+        meta,
+        isDraft,
+        isFuture
     };
 }
 
