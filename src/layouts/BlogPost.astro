@@ -8,6 +8,10 @@ import FormattedDate from '../components/FormattedDate.astro';
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+
+// シェア用のURL（本番環境では適切なドメインに変更）
+const currentUrl = Astro.url.href;
+const shareText = `${title} | shiopon blog`;
 ---
 
 <html lang="en">
@@ -107,6 +111,75 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				border: none;
 				border-top: 1px solid var(--border-color);
 			}
+			
+			/* シェアボタンのスタイル */
+			.share-section {
+				margin-top: 3em;
+				padding: 1.5em 0;
+				text-align: center;
+			}
+			.share-title {
+				margin-bottom: 1em;
+				color: var(--text-secondary);
+				font-size: 0.9rem;
+				font-weight: normal;
+			}
+			.share-buttons {
+				display: flex;
+				justify-content: center;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+			}
+			.share-button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				text-decoration: none;
+				transition: all 0.2s ease;
+				border: 1px solid var(--border-color);
+				position: relative;
+			}
+			.share-button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+			}
+			.share-button.twitter {
+				background: var(--bg-secondary);
+				color: #1da1f2;
+			}
+			.share-button.twitter:hover {
+				background: #1da1f2;
+				color: white;
+				border-color: #1da1f2;
+			}
+			.share-button.facebook {
+				background: var(--bg-secondary);
+				color: #1877f2;
+			}
+			.share-button.facebook:hover {
+				background: #1877f2;
+				color: white;
+				border-color: #1877f2;
+			}
+			.share-button.hatena {
+				background: var(--bg-secondary);
+				color: #00a4de;
+			}
+			.share-button.hatena:hover {
+				background: #00a4de;
+				color: white;
+				border-color: #00a4de;
+			}
+
+			.share-icon {
+				width: 20px;
+				height: 20px;
+				fill: currentColor;
+			}
+			
 			@media (max-width: 720px) {
 				article {
 					padding: 2em 1em;
@@ -122,6 +195,20 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				}
 				.prose :global(h3) {
 					font-size: 1.2em;
+				}
+				.share-section {
+					padding: 1em 0;
+				}
+				.share-buttons {
+					gap: 0.5rem;
+				}
+				.share-button {
+					width: 36px;
+					height: 36px;
+				}
+				.share-icon {
+					width: 16px;
+					height: 16px;
 				}
 			}
 		</style>
@@ -148,8 +235,51 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="prose">
 					<slot />
 				</div>
+				
+				<!-- シェアボタン -->
+				<div class="share-section">
+					<h3 class="share-title">Share</h3>
+					<div class="share-buttons">
+						<a 
+							href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="share-button twitter"
+							title="Twitterでシェア"
+						>
+							<svg class="share-icon" viewBox="0 0 24 24">
+								<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+							</svg>
+						</a>
+						
+						<a 
+							href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="share-button facebook"
+							title="Facebookでシェア"
+						>
+							<svg class="share-icon" viewBox="0 0 24 24">
+								<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+							</svg>
+						</a>
+						
+						<a 
+							href={`https://b.hatena.ne.jp/entry/s/${currentUrl.replace(/^https?:\/\//, '')}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="share-button hatena"
+							title="はてなブックマーク"
+						>
+							<svg class="share-icon" viewBox="0 0 24 24">
+								<path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM8.5 17.5c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5zm7-8.5H13V6h2.5v3z"/>
+							</svg>
+						</a>
+					</div>
+				</div>
 			</article>
 		</main>
 		<Footer />
+
 	</body>
 </html>
