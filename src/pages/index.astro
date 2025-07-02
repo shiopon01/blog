@@ -12,7 +12,7 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
@@ -111,7 +111,7 @@ const posts = (await getCollection('blog')).sort(
 				{
 					posts.map((post) => (
 						<li>
-							<a href={`/blog/${post.id}/`}>
+							<a href={`/articles/${post.id}/`}>
 								<h3 class="title">{post.data.title}</h3>
 								<p class="date">
 									<FormattedDate date={post.data.pubDate} />
@@ -121,7 +121,7 @@ const posts = (await getCollection('blog')).sort(
 					))
 				}
 			</ul>
-			<a href="/blog" class="more-link">すべての記事を見る →</a>
+			<a href="/articles" class="more-link">すべての記事を見る →</a>
 		</main>
 		<Footer />
 	</body>
