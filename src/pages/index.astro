@@ -17,85 +17,139 @@ const posts = (await getCollection('blog')).sort(
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				width: 720px;
+				width: 760px;
 				max-width: calc(100% - 2em);
 				margin: 0 auto;
-				padding: 3em 1em;
+				padding: 3.5em 1em 4.5em;
+			}
+			.hero {
+				margin-bottom: 2.5rem;
+				padding: 0;
+			}
+			.eyebrow {
+				margin: 0 0 0.75rem 0;
+				color: var(--text-muted);
+				font-size: 0.85rem;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
 			}
 			h1 {
-				margin-bottom: 1rem;
+				margin-bottom: 0.75rem;
 				color: var(--text-primary);
+				font-size: 2.2rem;
 			}
 			.intro {
-				margin-bottom: 3rem;
+				margin: 0;
 				color: var(--text-secondary);
 				font-size: 1.1rem;
+				line-height: 1.7;
+			}
+			.section-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 1rem;
 			}
 			h2 {
-				margin-top: 3rem;
-				margin-bottom: 2rem;
+				margin: 0;
 				color: var(--text-primary);
+				font-size: 1.6rem;
 			}
-			ul {
+			.all-link {
+				color: var(--text-muted);
+				text-decoration: none;
+				font-size: 0.9rem;
+			}
+			.all-link:hover {
+				color: var(--accent);
+			}
+			.post-list {
 				list-style-type: none;
 				padding: 0;
 				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0;
 			}
-			li {
-				margin-bottom: 1.5rem;
-				padding: 1rem;
-				background: var(--bg-secondary);
-				border-radius: 6px;
-				border: 1px solid var(--border-color);
-				transition: transform 0.2s ease;
+			.post-item {
+				padding: 1.25rem 0;
+				border-bottom: 1px solid var(--border-color);
+				transition: background-color 0.2s ease;
 			}
-			li:hover {
-				transform: translateY(-1px);
+			.post-item:hover {
+				background: rgba(255, 255, 255, 0.02);
 			}
-			a {
+			.post-link {
+				display: grid;
+				grid-template-columns: 140px 1fr;
+				gap: 1.5rem;
 				text-decoration: none;
 				color: inherit;
+				align-items: center;
 			}
-			a:hover .title {
-				color: var(--accent);
+			.post-link.no-thumb {
+				grid-template-columns: 1fr;
+			}
+			.post-thumb {
+				width: 140px;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 8px;
+				border: 1px solid var(--border-color);
+			}
+			.post-body {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
 			}
 			.title {
-				font-size: 1.25rem;
-				margin: 0 0 0.25rem 0;
+				font-size: 1.2rem;
+				margin: 0;
 				color: var(--text-primary);
-				line-height: 1.3;
+				line-height: 1.4;
 				transition: color 0.2s ease;
+			}
+			.post-description {
+				margin: 0;
+				color: var(--text-secondary);
+				font-size: 0.95rem;
+				line-height: 1.6;
 			}
 			.date {
 				margin: 0;
 				color: var(--text-muted);
 				font-size: 0.85rem;
 			}
-			.more-link {
-				display: inline-block;
-				margin-top: 2rem;
+			.post-link:hover .title {
 				color: var(--accent);
-				text-decoration: none;
-				padding: 0.75rem 1.5rem;
-				background: var(--bg-secondary);
-				border: 1px solid var(--accent);
-				border-radius: 6px;
-				transition: all 0.2s ease;
 			}
-			.more-link:hover {
-				background: var(--accent);
-				color: var(--bg-main);
-				transform: translateY(-1px);
+			.post-list li:last-child {
+				border-bottom: none;
 			}
 			@media (max-width: 720px) {
 				main {
-					padding: 2em 1em;
+					padding: 2.5em 1em 3em;
 				}
-				li {
-					padding: 0.75rem;
+				.hero {
+					padding: 1.5rem;
+				}
+				h1 {
+					font-size: 1.8rem;
+				}
+				.section-header {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 0.5rem;
+				}
+				.post-link {
+					grid-template-columns: 1fr;
+				}
+				.post-thumb {
+					width: 100%;
+					height: 180px;
 				}
 				.title {
-					font-size: 1.1rem;
+					font-size: 1.05rem;
 				}
 			}
 		</style>
@@ -103,25 +157,47 @@ const posts = (await getCollection('blog')).sort(
 	<body>
 		<Header />
 		<main>
-			<h1>{SITE_TITLE}</h1>
-			<p class="intro">{SITE_DESCRIPTION}</p>
+			<section class="hero">
+				<h1>{SITE_TITLE}</h1>
+				<p class="intro">{SITE_DESCRIPTION}</p>
+			</section>
 			
-			<h2>最新の記事</h2>
-			<ul>
-				{
-					posts.map((post) => (
-						<li>
-							<a href={`/articles/${post.id}/`}>
-								<h3 class="title">{post.data.title}</h3>
-								<p class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-			<a href="/articles" class="more-link">すべての記事を見る →</a>
+			<section class="latest">
+				<div class="section-header">
+					<h2>最新の記事</h2>
+					<a class="all-link" href="/articles">すべて見る →</a>
+				</div>
+				<ul class="post-list">
+					{
+						posts.map((post) => (
+							<li class="post-item">
+							<a
+								href={`/articles/${post.id}/`}
+								class:list={['post-link', { 'no-thumb': !post.data.heroImage }]}
+							>
+									{
+										post.data.heroImage && (
+											<img
+												class="post-thumb"
+												src={post.data.heroImage}
+												alt={`${post.data.title}のサムネイル`}
+												loading="lazy"
+											/>
+										)
+									}
+									<div class="post-body">
+										<p class="date">
+											<FormattedDate date={post.data.pubDate} />
+										</p>
+										<h3 class="title">{post.data.title}</h3>
+										<p class="post-description">{post.data.description}</p>
+									</div>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
 		</main>
 		<Footer />
 	</body>

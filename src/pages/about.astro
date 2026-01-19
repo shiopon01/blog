@@ -14,27 +14,44 @@ import { SITE_TITLE } from '../consts';
 				width: 720px;
 				max-width: calc(100% - 2em);
 				margin: 0 auto;
-				padding: 3em 1em;
+				padding: 3.5em 1em 4em;
 			}
 			h1 {
-				margin-bottom: 2rem;
+				margin-bottom: 0.75rem;
 				color: var(--text-primary);
-			}
-			.profile {
-				background: var(--bg-secondary);
-				border: 1px solid var(--border-color);
-				border-radius: 8px;
-				padding: 2rem;
-				margin-bottom: 2rem;
 			}
 			.intro {
-				font-size: 1.2rem;
-				color: var(--text-primary);
-				margin-bottom: 2rem;
-				line-height: 1.6;
+				margin: 0 0 2rem 0;
+				font-size: 1.1rem;
+				color: var(--text-secondary);
+				line-height: 1.8;
 			}
-			.social-links {
-				margin-top: 2rem;
+			.section {
+				padding: 1.5rem 0;
+				border-top: 1px solid var(--border-color);
+			}
+			.section:first-of-type {
+				border-top: none;
+				padding-top: 0;
+			}
+			.section-title {
+				margin: 0 0 0.75rem 0;
+				font-size: 1.1rem;
+				color: var(--text-primary);
+			}
+			.section p {
+				margin: 0 0 0.75rem 0;
+				color: var(--text-secondary);
+				line-height: 1.8;
+			}
+			.section ul {
+				margin: 0;
+				padding-left: 1.2rem;
+				color: var(--text-secondary);
+				line-height: 1.8;
+			}
+			.section li {
+				margin-bottom: 0.4rem;
 			}
 			.social-link {
 				display: inline-flex;
@@ -42,17 +59,15 @@ import { SITE_TITLE } from '../consts';
 				gap: 0.5rem;
 				color: var(--accent);
 				text-decoration: none;
-				font-size: 1.1rem;
-				padding: 0.75rem 1.5rem;
-				background: var(--bg-tertiary);
-				border: 1px solid var(--accent);
-				border-radius: 6px;
-				transition: all 0.2s ease;
+				font-size: 1rem;
+				padding: 0.6rem 1.2rem;
+				border: 1px solid var(--border-color);
+				border-radius: 999px;
+				transition: color 0.2s ease, border-color 0.2s ease;
 			}
 			.social-link:hover {
-				background: var(--accent);
-				color: var(--bg-main);
-				transform: translateY(-1px);
+				color: var(--accent-dark);
+				border-color: var(--accent-dark);
 			}
 			.x-icon {
 				width: 20px;
@@ -61,13 +76,10 @@ import { SITE_TITLE } from '../consts';
 			}
 			@media (max-width: 720px) {
 				main {
-					padding: 2em 1em;
-				}
-				.profile {
-					padding: 1.5rem;
+					padding: 2.5em 1em 3em;
 				}
 				.intro {
-					font-size: 1.1rem;
+					font-size: 1rem;
 				}
 			}
 		</style>
@@ -76,18 +88,26 @@ import { SITE_TITLE } from '../consts';
 		<Header />
 		<main>
 			<h1>About</h1>
-			<div class="profile">
-				<p class="intro">I'm programmer in Japan</p>
-				
-				<div class="social-links">
-					<a href="https://x.com/shiopon01" target="_blank" rel="noopener noreferrer" class="social-link">
-						<svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true">
-							<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-						</svg>
-						@shiopon01
-					</a>
-				</div>
-			</div>
+			<p class="intro">shioponです。技術や日常について書いています。</p>
+			<section class="section">
+				<h2 class="section-title">このブログについて</h2>
+				<p>技術メモ、作ったもの、考えたことを中心に更新しています。</p>
+			</section>
+			<section class="section">
+				<h2 class="section-title">興味のあること</h2>
+				<ul>
+					<li>環境改善</li>
+				</ul>
+			</section>
+			<section class="section">
+				<h2 class="section-title">SNS</h2>
+				<a href="https://x.com/shiopon01" target="_blank" rel="noopener noreferrer" class="social-link">
+					<svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+					</svg>
+					@shiopon01
+				</a>
+			</section>
 		</main>
 		<Footer />
 	</body>
