@@ -7,7 +7,8 @@ import timezone from 'dayjs/plugin/timezone.js';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const regex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}/;
+const filenameRegex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}-/;
+const pubDateRegex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}/;
 
 async function main({ googleDriveFolderId, outputDirectoryPath }) {
     // 認証設定
@@ -64,12 +65,12 @@ async function exportFile({ drive, fileId }) {
 
 async function writeExportedFiles({ exportedFiles, outputDirectoryPath }) {
     exportedFiles.forEach(async (exportedFile) => {
-        if (!regex.exec(exportedFile.name)) {
+        if (!filenameRegex.exec(exportedFile.name)) {
             return;
         }
 
-        const { body, meta, isDraft, isFuture } = convertMetadata(exportedFile);
-        if (isDraft || isFuture) {
+        const { body, meta, isFuture } = convertMetadata(exportedFile);
+        if (isFuture) {
             return;
         }
 
@@ -97,21 +98,18 @@ async function writeExportedFiles({ exportedFiles, outputDirectoryPath }) {
 }
 
 function convertMetadata(exportedFile) {
-    const pubDateFromFilename = regex.exec(exportedFile.name)[0];
+    const pubDateFromFilename = pubDateRegex.exec(exportedFile.name)[0];
     const pubDateObj = dayjs(pubDateFromFilename).tz('Asia/Tokyo');
     const today = dayjs().tz('Asia/Tokyo');
 
     const meta = {
-        author: 'shiopon01',
         pubDate: pubDateObj.format('YYYY-MM-DD'),
-        title: '',
         postSlug: exportedFile.name,
+        title: '',
+        description: '',
         tags: [],
-        ogImage: '',
-        description: ''
     };
 
-    let isDraft = false;
     const isFuture = pubDateObj.isAfter(today, 'day');
 
     let bodyArr = exportedFile.data.split('\n');
@@ -128,9 +126,6 @@ function convertMetadata(exportedFile) {
             case 'description':
                 meta[key] = value;
                 break;
-            case 'draft':
-                isDraft = (value === 'true');
-                break;
             case 'tags':
                 meta[key] = value.split(',');
         }
@@ -139,7 +134,6 @@ function convertMetadata(exportedFile) {
     return {
         body: bodyArr.join('\n'),
         meta,
-        isDraft,
         isFuture
     };
 }
